@@ -15,17 +15,21 @@ exports.findOneByID = async(heroID) => {
 
 exports.update = async(heroID, payload) => {
   return Hero.update(payload, {
-    where: {heroID: heroID},
+    where: {id: heroID},
   });
 };
 
-exports.findAll = async() => {
-  return Hero.findAll({
+exports.findAll = async(offset) => {
+  const heroes = await Hero.findAll({
     order: [
       ['createdAt', 'ASC'],
     ],
     include: [{model: Type, required: true}],
+    limit: 10,
+    offset: offset,
   });
+  const count = await Hero.count();
+  return { heroes, count };
 };
 
 exports.destroyHero = async(heroID) => {

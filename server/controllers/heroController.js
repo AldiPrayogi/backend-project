@@ -9,8 +9,9 @@ const {
 } = HeroService;
 
 exports.findAllHeroes = async(req, res) => {
+  const offset = req.query.offset ? req.query.offset : 0;
   try {
-    const allHeroes = await fetchAllHeroes();
+    const allHeroes = await fetchAllHeroes(offset);
     res.status(200).send(allHeroes);
   } catch (error) {
     res.status(404).send({
@@ -20,9 +21,9 @@ exports.findAllHeroes = async(req, res) => {
 };
 
 exports.findOneHero = async(req, res) => {
-  const { heroID } = req.params;
+  const { id } = req.params;
   try {
-    const hero = await fetchOneHero(heroID);
+    const hero = await fetchOneHero(id);
     res.status(200).send(hero);
   } catch (error) {
     res.status(404).send({
@@ -49,14 +50,15 @@ exports.createHero = async(req, res) => {
 exports.updateHero = async(req, res) => {
   const payload = {
     name: req.body.name,
+    description: req.body.description,
   };
-  const { heroID } = req.params;
-
+  const { id } = req.params;
+  console.log(id);
   try {
-    await updateHero(heroID, payload);
+    await updateHero(id, payload);
     res.send({
       status: 201,
-      message: `Hero with HeroID=${heroID} Updated`,
+      message: `Hero with HeroID=${id} Updated`,
     });
 
   } catch (error){

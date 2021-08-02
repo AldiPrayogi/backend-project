@@ -10,13 +10,13 @@ const {
   fetchOneType,
 } = TypeService;
 
-exports.fetchAllHeroes = async() => {
-  const fetchedHeroes = await findAll();
+exports.fetchAllHeroes = async(offset) => {
+  const { heroes: fetchedHeroes, count } = await findAll(offset);
   if (fetchedHeroes.length === 0) {
     throw new Error('No Heroes Found!');
   }
 
-  return fetchedHeroes.map((hero) => {
+  const returnedHeroes = fetchedHeroes.map((hero) => {
     const heroValue = hero.dataValues;
     return {
       id: heroValue.id,
@@ -25,12 +25,14 @@ exports.fetchAllHeroes = async() => {
       level: heroValue.level,
       createdAt: heroValue.createdAt,
       updatedAt: heroValue.updatedAt,
-      Type: {
+      type: {
         id: heroValue.Type.dataValues.id,
         name: heroValue.Type.dataValues.name,
       },
     };
   });
+
+  return {returnedHeroes, count};
 };
 
 exports.fetchOneHero = async(heroID) => {
@@ -46,7 +48,7 @@ exports.fetchOneHero = async(heroID) => {
     level: fetchedHeroValue.level,
     createdAt: fetchedHeroValue.createdAt,
     updatedAt: fetchedHeroValue.updatedAt,
-    Type: {
+    type: {
       id: fetchedHeroValue.Type.dataValues.id,
       name: fetchedHeroValue.Type.dataValues.name,
     },

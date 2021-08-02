@@ -13,8 +13,8 @@ const router = express.Router();
 
 router.get('/', findAllHeroes);
 router.post('/', createHero);
-router.get('/:heroID', findOneHero);
-router.put('/:heroID', updateHero);
-router.delete('/:heroID', destroy);
+router.get('/:id', findOneHero);
+router.put('/:id', updateHero);
+router.delete('/:id', destroy);
 
 module.exports = router;
