@@ -17,6 +17,7 @@ const app = express();
 const healthRoutes = require('./server/routes/health-route');
 const swaggerRoutes = require('./server/routes/swagger-route');
 const heroRoutes = require('./server/routes/heroRoute');
+const typeRoutes = require('./server/routes/typeRoute');
 
 // enable parsing of http request body
 app.use(cors(corsOption));
@@ -27,6 +28,7 @@ app.use(bodyParser.json());
 app.use('/health', healthRoutes);
 app.use('/swagger', swaggerRoutes);
 app.use('/api/v1/heroes', heroRoutes);
+app.use('/api/v1/types', typeRoutes);
 
 // default path to serve up index.html (single page application)
 app.all('', (req, res) => {

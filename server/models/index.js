@@ -20,5 +20,12 @@ db.sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.heroes = require('./Hero')(sequelize, Sequelize);
+db.types = require('./Type')(sequelize, Sequelize);
+
+db.types.hasMany(db.heroes, {foreignKey: 'typeID'});
+db.heroes.belongsTo(db.types, {
+  foreignKey: 'typeID',
+  targetKey: 'id',
+});
 
 module.exports = db;

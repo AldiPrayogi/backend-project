@@ -1,18 +1,36 @@
 const HeroRepository = require('../repositories/heroRepository');
+const TypeService = require('./typeService');
 const { v4 } = require('uuid');
 
 const {
   findAll, findOneByID, destroyHero, update, create,
 } = HeroRepository;
 
+const {
+  fetchOneType,
+} = TypeService;
+
 exports.fetchAllHeroes = async() => {
   const fetchedHeroes = await findAll();
-  console.log(fetchedHeroes);
   if (fetchedHeroes.length === 0) {
     throw new Error('No Heroes Found!');
   }
 
-  return fetchedHeroes;
+  return fetchedHeroes.map((hero) => {
+    const heroValue = hero.dataValues;
+    return {
+      id: heroValue.id,
+      name: heroValue.name,
+      description: heroValue.description,
+      level: heroValue.level,
+      createdAt: heroValue.createdAt,
+      updatedAt: heroValue.updatedAt,
+      Type: {
+        id: heroValue.Type.dataValues.id,
+        name: heroValue.Type.dataValues.name,
+      },
+    };
+  });
 };
 
 exports.fetchOneHero = async(heroID) => {
@@ -20,7 +38,19 @@ exports.fetchOneHero = async(heroID) => {
   if (!fetchedHero){
     throw new Error(`No Heroes With ID: ${heroID} is Found!`);
   }
-  return fetchedHero;
+  const fetchedHeroValue = fetchedHero.dataValues;
+  return {
+    id: fetchedHeroValue.id,
+    name: fetchedHeroValue.name,
+    description: fetchedHeroValue.description,
+    level: fetchedHeroValue.level,
+    createdAt: fetchedHeroValue.createdAt,
+    updatedAt: fetchedHeroValue.updatedAt,
+    Type: {
+      id: fetchedHeroValue.Type.dataValues.id,
+      name: fetchedHeroValue.Type.dataValues.name,
+    },
+  };
 };
 
 exports.makeHero = async(payload) => {
@@ -28,20 +58,29 @@ exports.makeHero = async(payload) => {
   const heroID = uuid.substr(0, uuid.indexOf('-'));
   let flag = true;
   while (flag){
-    const searchedTweet = await findOneByID(heroID);
-    if (!searchedTweet) flag = false;
+    const searchedHero = await findOneByID(heroID);
+    if (!searchedHero) flag = false;
   }
 
   const {
     name,
+    description,
+    level,
+    typeID,
   } = payload;
 
   if (!name){
     throw new Error('Hero\'s Name is Not Provided!');
   }
 
+  await fetchOneType(typeID);
+
   const newPayload = {
-    heroID, name,
+    id: heroID,
+    name,
+    description,
+    level,
+    typeID,
   };
 
   const createdHero = await create(newPayload);
@@ -51,16 +90,15 @@ exports.makeHero = async(payload) => {
   return createdHero;
 };
 
-exports.deleteHero = async(payload) => {
-  const { HeroID } = payload;
-  const heroToBeDeleted = await findOneByID(HeroID);
+exports.deleteHero = async(heroID) => {
+  const heroToBeDeleted = await findOneByID(heroID);
 
   if (!heroToBeDeleted) {
     throw new Error('Cannot Find The Hero!');
   }
 
-  const deletedHero = await destroyHero(HeroID);
-  if (deletedHero[0] === 0){
+  const deletedHero = await destroyHero(heroID);
+  if (deletedHero === 0){
     throw new Error('Failed to Delete Hero!');
   }
 

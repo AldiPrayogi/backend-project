@@ -5,6 +5,7 @@ const {
   makeHero,
   fetchOneHero,
   updateHero,
+  deleteHero,
 } = HeroService;
 
 exports.findAllHeroes = async(req, res) => {
@@ -39,30 +40,44 @@ exports.createHero = async(req, res) => {
       createdHero: createdHero,
     });
   } catch (error) {
-    res.status(404).send({
+    res.status(500).send({
       message: error.message,
     });
   }
 };
 
 exports.updateHero = async(req, res) => {
-  console.log(req.params);
-  console.log(req.body);
   const payload = {
     name: req.body.name,
   };
-  console.log(payload);
   const { heroID } = req.params;
 
   try {
     await updateHero(heroID, payload);
     res.send({
       status: 201,
-      message: 'Tweet Updated',
+      message: `Hero with HeroID=${heroID} Updated`,
     });
 
   } catch (error){
     res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+exports.destroy = async(req, res) => {
+  const { heroID } = req.params;
+
+  try {
+    await deleteHero(heroID);
+    res.send({
+      status: 200,
+      message: `Hero with ID ${heroID} is Successfully Deleted`,
+    });
+  } catch (error) {
+    res.send({
+      status: 500,
       message: error.message,
     });
   }
