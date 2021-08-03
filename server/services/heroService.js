@@ -69,7 +69,7 @@ exports.makeHero = async(payload) => {
     name,
     description,
     level,
-    typeName,
+    type: typeName,
   } = payload;
 
   let {

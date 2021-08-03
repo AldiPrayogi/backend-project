@@ -2,7 +2,7 @@ const TypeRepository = require('../repositories/typeRepository');
 const { v4 } = require('uuid');
 
 const {
-  findAll, findOne, create,
+  findAll, findOne, create, findOneByName,
 } = TypeRepository;
 
 exports.makeType = async(payload) => {
@@ -53,7 +53,7 @@ exports.fetchOneType = async(typeID) => {
 };
 
 exports.fetchOneTypeByName = async(typeName) => {
-  const fetchedType = await findOne(typeName);
+  const fetchedType = await findOneByName(typeName);
   if (!fetchedType){
     throw new Error(`No Type With name: ${typeName} is Found!`);
   }
