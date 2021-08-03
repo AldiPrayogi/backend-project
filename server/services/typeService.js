@@ -52,3 +52,11 @@ exports.fetchOneType = async(typeID) => {
   return fetchedType;
 };
 
+exports.fetchOneTypeByName = async(typeName) => {
+  const fetchedType = await findOne(typeName);
+  if (!fetchedType){
+    throw new Error(`No Type With name: ${typeName} is Found!`);
+  }
+  return fetchedType;
+};
+

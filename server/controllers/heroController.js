@@ -51,9 +51,10 @@ exports.updateHero = async(req, res) => {
   const payload = {
     name: req.body.name,
     description: req.body.description,
+    type: req.body.type,
+    level: req.body.level,
   };
   const { id } = req.params;
-  console.log(id);
   try {
     await updateHero(id, payload);
     res.send({

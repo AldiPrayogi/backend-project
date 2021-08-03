@@ -8,6 +8,7 @@ const {
 
 const {
   fetchOneType,
+  fetchOneTypeByName,
 } = TypeService;
 
 exports.fetchAllHeroes = async(offset) => {
@@ -68,6 +69,10 @@ exports.makeHero = async(payload) => {
     name,
     description,
     level,
+    typeName,
+  } = payload;
+
+  let {
     typeID,
   } = payload;
 
@@ -75,7 +80,13 @@ exports.makeHero = async(payload) => {
     throw new Error('Hero\'s Name is Not Provided!');
   }
 
-  await fetchOneType(typeID);
+  if (typeID){
+    await fetchOneType(typeID);
+  }
+  if (typeName && !typeID){
+    const returnedType = await fetchOneTypeByName(typeName);
+    typeID = returnedType.id;
+  }
 
   const newPayload = {
     id: heroID,
@@ -113,6 +124,14 @@ exports.updateHero = async(heroID, payload) => {
   if (!heroToBeUpdated){
     throw new Error('Cannot Find The Hero!');
   }
+
+  if (!payload.type.id){
+    const newType = await fetchOneTypeByName(payload.type.name);
+    payload.type.id = newType.dataValues.id;
+  }
+
+  payload.typeID = payload.type.id;
+  delete payload.type;
 
   const updatedHero = await update(heroID, payload);
 

@@ -16,3 +16,9 @@ exports.findAll = async() => {
 exports.findOne = async(typeID) => {
   return Type.findByPk(typeID);
 };
+
+exports.findOneByName = async(typeName) => {
+  return Type.findOne({
+    where: {name: typeName},
+  });
+};
