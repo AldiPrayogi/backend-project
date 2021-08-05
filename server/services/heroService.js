@@ -33,7 +33,7 @@ exports.fetchAllHeroes = async(offset) => {
     };
   });
 
-  return {returnedHeroes, count};
+  return { returnedHeroes, count };
 };
 
 exports.fetchOneHero = async(heroID) => {
@@ -57,6 +57,17 @@ exports.fetchOneHero = async(heroID) => {
 };
 
 exports.makeHero = async(payload) => {
+  const {
+    name,
+    description,
+    level,
+    type: typeName,
+  } = payload;
+
+  if (!name){
+    throw new Error('Hero\'s Name is Not Provided!');
+  }
+
   const uuid = v4();
   const heroID = uuid.substr(0, uuid.indexOf('-'));
   let flag = true;
@@ -65,20 +76,9 @@ exports.makeHero = async(payload) => {
     if (!searchedHero) flag = false;
   }
 
-  const {
-    name,
-    description,
-    level,
-    type: typeName,
-  } = payload;
-
   let {
     typeID,
   } = payload;
-
-  if (!name){
-    throw new Error('Hero\'s Name is Not Provided!');
-  }
 
   if (typeID){
     await fetchOneType(typeID);

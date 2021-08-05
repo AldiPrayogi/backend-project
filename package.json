@@ -12,7 +12,7 @@
     "check-coverage": "nyc report --check-coverage --lines 100",
     "lint": "eslint --ignore-path .gitignore .",
     "fix": "eslint --ignore-path .gitignore . --fix",
-    "test": "nyc mocha test --recursive --exit"
+    "test": "jest"
   },
   "husky": {
     "hooks": {
@@ -49,6 +49,7 @@
     "eslint": "^7.28.0",
     "eslint-config-strongloop": "^2.1.0",
     "husky": "^6.0.0",
+    "jest": "^27.0.6",
     "nodemon": "^2.0.7",
     "supertest": "^6.1.3"
   }

@@ -5,8 +5,9 @@
         "mocha": true
     },
     "extends": "strongloop",
-    "parserOptions": { 
+    "parserOptions": {
         "ecmaVersion": 10,
         "sourceType": "module"
-    }
+    },
+    "ignorePatterns": ["/test/*"]
 }
