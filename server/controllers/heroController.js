@@ -70,13 +70,13 @@ exports.updateHero = async(req, res) => {
 };
 
 exports.destroy = async(req, res) => {
-  const { heroID } = req.params;
+  const { id } = req.params;
 
   try {
-    await deleteHero(heroID);
+    await deleteHero(id);
     res.send({
       status: 200,
-      message: `Hero with ID ${heroID} is Successfully Deleted`,
+      message: `Hero with ID ${id} is Successfully Deleted`,
     });
   } catch (error) {
     res.send({
